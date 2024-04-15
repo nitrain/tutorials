@@ -1,4 +1,4 @@
-# Tutorials for nitrain
+# Tutorials and examples for nitrain
 
 This repo contains documentation that goes in-depth on each aspect of the nitrain framework, as well as complete examples of training medical imaging AI models using nitrain. All tutorials are available here via reproducible notebooks, but you can also browse them online at [nitrain.dev/docs](https://nitrain.dev/docs) in rendered format.
 
