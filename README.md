@@ -16,7 +16,7 @@ This folders contains complete notebooks that show you how to train medical imag
 
 - [Predicting age from T1 brain images](https://github.com/nitrain/tutorials/blob/main/regression/T1-brain-age-with-keras.ipynb)
 
-## Documentation
+## Nitrain
 
 This folder contains all of the tutorials for nitrain. Each tutorial will teach you how to certain classes or functions in the nitrain framework. These tutorials can be followed independently, so feel free to use them to sharpen your knowledge in a particular area.
 
