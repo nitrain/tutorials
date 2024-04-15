@@ -1,6 +1,6 @@
 # Tutorials for nitrain
 
-This repo contains documentation that goes in-depth on each aspect of the nitrain framework, as well as complete examples of training medical imaging AI models using nitrain. The tutorials in this repo are split by type of task.
+This repo contains documentation that goes in-depth on each aspect of the nitrain framework, as well as complete examples of training medical imaging AI models using nitrain. All tutorials are available here via reproducible notebooks, but you can also browse them online at [nitrain.dev/docs](https://nitrain.dev/docs)
 
 If you are looking to follow a guided plan that teaches you everything you need to know about training medical imaging AI models using nitrain, then we recommend also checking out the book [Becoming a medical imaging AI expert with Python](https://book.nitrain.dev).
 
@@ -12,13 +12,13 @@ This folder contains all of the tutorials for nitrain. Each tutorial will teach 
 
 This folders contains complete notebooks that show you how to train medical image segmentation models using nitrain. All notebooks should be completely reproducible, including accessing the original datasets. It includes the following examples:
 
-- Liver tumor segmentation from CT images
+- [Liver tumor segmentation from CT images](https://github.com/nitrain/tutorials/blob/main/segmentation/Liver-tumor-segmentation.ipynb)
 
 ## Regression
 
 This folders contains complete notebooks that show you how to train medical image segmentation models using nitrain. All notebooks should be completely reproducible, including accessing the original datasets. It includes the following examples:
 
-- Predicting chronological age from T1 brain images ("brain age")
+- [Predicting age from T1 brain images](https://github.com/nitrain/tutorials/blob/main/regression/T1-brain-age-with-keras.ipynb)
 
 ## Contributing
 
