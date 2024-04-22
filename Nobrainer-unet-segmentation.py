@@ -19,9 +19,6 @@ dataset = nitrain.Dataset(
 
 x, y = dataset[0]
 
-import ntimage as nt
-
-
 loader = nitrain.Loader(dataset,
                         images_per_batch=2)
 
