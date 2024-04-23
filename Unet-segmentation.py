@@ -26,9 +26,9 @@ loader = nitrain.Loader(dataset,
 # get an example batch from the loader
 xbatch, ybatch = next(iter(loader))
 
-from nobrainer.models import unet
-model = unet(n_classes=1,
-             input_shape=(128,128,128,1))
+arch_fn = nitrain.fetch_architecture('unet', dim=3)
+model = arch_fn((128,128,128,1), number_of_outputs=1,
+                 number_of_layers=2, number_of_filters_at_base_layer=12)
 
 trainer = nitrain.Trainer(model,
                           task='segmentation')
