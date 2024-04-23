@@ -17,13 +17,13 @@ dataset = nitrain.Dataset(
     }
 )
 
-# get an example input + output from the dataset
+# optional: get an example input + output from the dataset
 x, y = dataset[0]
 
 loader = nitrain.Loader(dataset,
                         images_per_batch=4)
 
-# get an example batch from the loader
+#  optional: get an example batch from the loader
 xbatch, ybatch = next(iter(loader))
 
 from nobrainer.models import unet
@@ -33,7 +33,7 @@ model = unet(n_classes=1,
 trainer = nitrain.Trainer(model,
                           task='segmentation')
 
-# see information about how the trainer is compiled
+# optional: see information about how the trainer is compiled
 print(trainer)
 
 trainer.fit(loader, epochs=5)
