@@ -6,7 +6,7 @@ from nitrain.readers import ColumnReader, ComposeReader
 from nitrain import transforms as tx
 
 # note: have to convert mgz to nii.gz manually because mgz is not supported by ntimage yet
-csv_path = os.path.join('~/Desktop/nobrainer/filepaths.csv')
+csv_path = os.path.expanduser('~/Desktop/nobrainer/filepaths.csv')
 
 dataset = nitrain.Dataset(
     inputs=ColumnReader(csv_path, 'features', is_image=True),
