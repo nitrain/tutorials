@@ -1,10 +1,11 @@
 ## Example: Train aparc segmentation model using nitrain with UNET architecture from nobrainer
 
-import os
 import nitrain as nt
 from nitrain.readers import ColumnReader, ComposeReader
 from nitrain import transforms as tx
+
 import nobrainer
+from nobrainer.models import unet
 
 #### Start data download ####
 
@@ -56,7 +57,6 @@ loader = nt.Loader(dataset,
 #  optional: get an example batch from the loader
 xbatch, ybatch = next(iter(loader))
 
-from nobrainer.models import unet
 model = unet(n_classes=1,
              input_shape=(128,128,1))
 
