@@ -4,6 +4,7 @@
 examples/draft*
 tutorials/draft*
 draft*
+drafts/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
