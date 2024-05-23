@@ -13,7 +13,7 @@ dataset = nt.Dataset(
     outputs=ColumnReader(csv_path, 'labels', is_image=True),
     transforms={
         ('inputs','outputs'): [tx.Resample((128,128,128))],
-        'outputs': [tx.Cast('uint8'),
+        'outputs': [tx.Astype('uint8'),
                     tx.CustomFunction(lambda img: (img == 4) | (img == 43))]
     }
 )
