@@ -35,7 +35,7 @@ dataset = nt.Dataset(inputs=readers.ImageReader('*/*.jpeg'),
 ## optional: select 1500 random records to have a smaller dataset
 dataset = dataset.select(1500, random=True)
 
-## optional: get example record
+## optional: get example record by indexing the dataset
 x, y = dataset[0]
 
 # random split: 80% training, 10% validation, 10% testing
@@ -55,7 +55,7 @@ train_loader = nt.Loader(train_ds,
 test_loader = train_loader.copy(test_ds, drop_transforms=True)
 val_loader = train_loader.copy(val_ds, drop_transforms=True)
 
-## optional: get example batch
+## optional: get example batch by calling next on iterator
 xb, yb = next(iter(train_loader))
 
 # fetch architecture from antspynet
