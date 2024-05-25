@@ -1,9 +1,7 @@
-## Mednist clasification
+## MedNIST clasification with a Pytorch model
 
 import nitrain as nt
 from nitrain import readers, transforms as tx
-import ants
-import numpy as np
 
 ## download data and unzip from this link:
 ## https://github.com/Project-MONAI/MONAI-extra-test-data/releases/download/0.8.1/MedNIST.tar.gz
@@ -84,10 +82,7 @@ trainer = TorchTrainer(model=model,
                        device='cpu')
 
 # fit model
-results = trainer.fit(train_loader, epochs=3, validation=val_loader)
-
-# perform inference on test dataset
-#ypred = trainer.predict(test_loader)
+val_results = trainer.fit(train_loader, epochs=3, validation=val_loader)
 
 # evaluate test dataset
-#results = trainer.evaluate(test_loader)
+test_results = trainer.evaluate(test_loader)
