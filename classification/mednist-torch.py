@@ -1,4 +1,19 @@
-## MedNIST clasification with a Pytorch model
+## MedNIST clasification with a Pytorch model from MONAI
+
+# About:
+# MedNIST is a collection of 2d images from 6 different modalities / image types
+# where the goal is to predict the class from the image. 
+
+# The folder structure looks like this:
+# AbdomenCT/
+#    000000.jpeg
+#    000001.jpeg
+#    ...
+# BreastMRI/
+#    000000.jpeg
+#    000001.jpeg
+#    ...
+# ...
 
 import nitrain as nt
 from nitrain import readers, transforms as tx

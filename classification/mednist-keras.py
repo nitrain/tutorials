@@ -2,12 +2,23 @@
 
 # About:
 # MedNIST is a collection of 2d images from 6 different modalities / image types
-# where the goal is to predict the class from the image.
+# where the goal is to predict the class from the image. 
+
+# The folder structure looks like this:
+# AbdomenCT/
+#    000000.jpeg
+#    000001.jpeg
+#    ...
+# BreastMRI/
+#    000000.jpeg
+#    000001.jpeg
+#    ...
+# ...
 
 import nitrain as nt
 from nitrain import readers, transforms as tx
 
-## download data and unzip from this link:
+## Download data and unzip from this link:
 ## https://github.com/Project-MONAI/MONAI-extra-test-data/releases/download/0.8.1/MedNIST.tar.gz
 
 # set path to download
