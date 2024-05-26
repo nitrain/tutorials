@@ -3,7 +3,6 @@ import ants
 import nitrain as nt
 from nitrain import readers, samplers, transforms as tx
 
-
 # create example data - 40 image + segmentation pairs
 base_dir = os.path.expanduser('~/Desktop/segmentation-example/')
 if not os.path.exists(os.path.join(base_dir, 'img-1.nii.gz')):
@@ -29,15 +28,15 @@ x, y = dataset[0]
 # notice that the same random rotation must be applied to the original and segmented image
 loader = nt.Loader(dataset,
                    images_per_batch=4,
-                   sampler=samplers.RandomPatchSampler(patch_size=(96,96),
-                                                       patches_per_image=4,
-                                                       batch_size=8),
                    transforms={
-                       ('inputs', 'outputs'): tx.RandomRotate(-90, 90, p=1)
+                       ('inputs', 'outputs'): [tx.RandomRotate(-90, 90, p=1),
+                                               tx.RandomCrop((96,96))]
                    })
 
 ## optional: read an example batch
 xb, yb = next(iter(loader))
-
+    
 ## optional: plot sampled patches
-ants.plot_grid([ants.from_numpy(xb[i,:,:,0]) for i in range(8)])
+ants.plot_grid([ants.from_numpy(xb[i,:,:,0]) for i in range(4)])
+
+# create model
