@@ -32,8 +32,8 @@ dataset = nt.Dataset(inputs=readers.ImageReader('*/*.jpeg'),
                          'inputs': tx.RangeNormalize()
                      })
 
-# select 1500 random records to have a smaller dataset
-dataset = dataset.select(1500, random=True)
+# select 1000 random records to have a smaller dataset
+dataset = dataset.select(1000, random=True)
 
 ## get example record
 x, y = dataset[0]

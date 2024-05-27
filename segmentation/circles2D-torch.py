@@ -21,22 +21,66 @@ dataset = nt.Dataset(readers.ImageReader('img-*.nii.gz'),
                          'inputs': tx.RangeNormalize()
                      })
 
+train_dataset, test_dataset = dataset.split((0.8, 0.2), random=True)
+
 ## optional: read an example record
 x, y = dataset[0]
 
 # create loader with random augmentation transforms
 # notice that the same random rotation must be applied to the original and segmented image
-loader = nt.Loader(dataset,
-                   images_per_batch=4,
-                   transforms={
-                       ('inputs', 'outputs'): [tx.RandomRotate(-90, 90, p=1),
-                                               tx.RandomCrop((96,96))]
-                   })
+train_loader = nt.Loader(train_dataset,
+                         images_per_batch=4,
+                         channels_first=True,
+                         transforms={
+                             ('inputs', 'outputs'): [tx.RandomRotate(-90, 90, p=1),
+                                                     tx.RandomCrop((96,96))]
+                         })
+
+test_loader = train_loader.copy(test_dataset)
 
 ## optional: read an example batch
-xb, yb = next(iter(loader))
+xb, yb = next(iter(train_loader))
     
 ## optional: plot sampled patches
-ants.plot_grid([ants.from_numpy(xb[i,:,:,0]) for i in range(4)])
+#ants.plot_grid([ants.from_numpy(xb[i,:,:,0]) for i in range(4)])
 
 # create model
+import monai
+import torch
+
+model = monai.networks.nets.UNet(
+    spatial_dims=2,
+    in_channels=1,
+    out_channels=1,
+    channels=(16, 32, 64, 128, 256),
+    strides=(2, 2, 2, 2),
+    num_res_units=2,
+)
+
+# create loss, optimizer, metrics
+loss_function = monai.losses.DiceLoss(sigmoid=True)
+optimizer = torch.optim.Adam(model.parameters(), 1e-3)
+def dice_metric(ytrue, ypred):
+    from monai.data import decollate_batch
+    from monai.transforms import Activations, AsDiscrete, Compose
+    post_trans = Compose([Activations(sigmoid=True), AsDiscrete(threshold=0.5)])
+    dice_metric = monai.metrics.DiceMetric(include_background=True, reduction="mean", get_not_nans=False)
+    ypred_act = [post_trans(i) for i in decollate_batch(ypred)]
+    ytrue_act = decollate_batch(ytrue)
+    dice_metric(y_pred=ypred_act, y=ytrue_act)
+    result = dice_metric.aggregate().item()
+    dice_metric.reset()
+    return result
+
+# create trainer
+from nitrain.trainers import TorchTrainer
+trainer = TorchTrainer(model,
+                       optimizer=optimizer,
+                       loss=loss_function,
+                       metrics=[dice_metric])
+
+# fit model
+results = trainer.fit(train_loader, epochs=50, validation=test_loader)
+
+# evaluate model
+test_results = trainer.evaluate(test_loader)
