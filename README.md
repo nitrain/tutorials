@@ -1,24 +1,12 @@
 # Tutorials and examples for nitrain
 
-This repo contains documentation that goes in-depth on each aspect of the nitrain framework, as well as complete examples of training medical imaging AI models using nitrain. All tutorials are available here via reproducible notebooks, but you can also browse them online at [nitrain.dev/docs](https://nitrain.dev/docs) in rendered format.
+This repository contains full end-to-end tutorials and examples for the nitrain framework for medical imaging AI. They cover different types of imaging types (2D, 3D), tasks (classification, segmentation, regression), and frameworks (keras, pytorch). 
 
-If you are looking to follow a guided plan that teaches you everything you need to know about training medical imaging AI models using nitrain, then we recommend also checking out the book [Becoming a medical imaging AI expert with Python](https://book.nitrain.dev).
+If you are looking to learn more about training medical imaging AI models in general, then check out the book [Becoming a medical imaging AI expert with Python](https://book.nitrain.dev). An overview of the various tutorials available here is presented below.
 
-## Segmentation
-
-This folders contains complete notebooks that show you how to train medical image segmentation models using nitrain. All notebooks should be completely reproducible, including accessing the original datasets. It includes the following examples:
-
-- [Liver tumor segmentation from CT images](https://github.com/nitrain/tutorials/blob/main/segmentation/Liver-tumor-segmentation.ipynb)
-
-## Regression
-
-This folders contains complete notebooks that show you how to train medical image segmentation models using nitrain. All notebooks should be completely reproducible, including accessing the original datasets. It includes the following examples:
-
-- [Predicting age from T1 brain images](https://github.com/nitrain/tutorials/blob/main/regression/T1-brain-age-with-keras.ipynb)
-
-## Nitrain
-
-This folder contains all of the tutorials for nitrain. Each tutorial will teach you how to certain classes or functions in the nitrain framework. These tutorials can be followed independently, so feel free to use them to sharpen your knowledge in a particular area.
+- Introduction - using the nitrain framework [[Link](https://github.com/nitrain/tutorials/tree/main/introduction)]
+- Segmentation - training medical image segmentation models with nitrain [[Link](https://github.com/nitrain/tutorials/tree/main/segmentation)]
+- Classification - training models for classification with nitrain [[Link](https://github.com/nitrain/tutorials/tree/main/classification)]
 
 ## Contributing
 
