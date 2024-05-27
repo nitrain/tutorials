@@ -30,7 +30,6 @@ x, y = dataset[0]
 # notice that the same random rotation is applied to the original and segmented image
 train_loader = nt.Loader(train_dataset,
                          images_per_batch=4,
-                         channels_first=True,
                          transforms={
                              ('inputs', 'outputs'): [tx.RandomRotate(-90, 90, p=1),
                                                      tx.RandomCrop((96,96))]
@@ -44,43 +43,26 @@ xb, yb = next(iter(train_loader))
 ## optional: plot sampled patches
 #ants.plot_grid([ants.from_numpy(xb[i,:,:,0]) for i in range(4)])
 
-# create model
-import monai
-import torch
-
-model = monai.networks.nets.UNet(
-    spatial_dims=2,
-    in_channels=1,
-    out_channels=1,
-    channels=(16, 32, 64, 128, 256),
-    strides=(2, 2, 2, 2),
-    num_res_units=2,
-)
-
-# create loss, optimizer, metrics
-loss_function = monai.losses.DiceLoss(sigmoid=True)
-optimizer = torch.optim.Adam(model.parameters(), 1e-3)
-def dice_metric(ytrue, ypred):
-    from monai.data import decollate_batch
-    from monai.transforms import Activations, AsDiscrete, Compose
-    post_trans = Compose([Activations(sigmoid=True), AsDiscrete(threshold=0.5)])
-    dice_metric = monai.metrics.DiceMetric(include_background=True, reduction="mean", get_not_nans=False)
-    ypred_act = [post_trans(i) for i in decollate_batch(ypred)]
-    ytrue_act = decollate_batch(ytrue)
-    dice_metric(y_pred=ypred_act, y=ytrue_act)
-    result = dice_metric.aggregate().item()
-    dice_metric.reset()
-    return result
+# create unet model in keras via antspynet
+arch_fn = nt.fetch_architecture('unet', dim=2)
+model = arch_fn((96,96,1), 
+                number_of_outputs=1,
+                number_of_layers=4,
+                mode='sigmoid')
 
 # create trainer
-from nitrain.trainers import TorchTrainer
-trainer = TorchTrainer(model,
-                       optimizer=optimizer,
-                       loss=loss_function,
-                       metrics=[dice_metric])
+trainer = nt.Trainer(model,
+                     task='segmentation')
 
 # fit model
-results = trainer.fit(train_loader, epochs=50, validation=test_loader)
+results = trainer.fit(train_loader, epochs=15, validation=test_loader)
 
 # evaluate model
 test_results = trainer.evaluate(test_loader)
+
+# predict model
+xb, yb = next(iter(train_loader))
+yb_pred = trainer.predict(xb)
+
+## optional: plot predictions
+#ants.plot(ants.from_numpy(xb[0,:,:,0]), ants.from_numpy(yb_pred[0,:,:,0]), overlay_alpha=0.7)
