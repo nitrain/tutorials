@@ -25,11 +25,27 @@ import ants
 #     ...
 
 # create dataset
+# transforms include:
+# - converting output segmentation to integer type
+# - reorienting and resampling all images to a common space
+# - standard normalizing input image
 base_dir = '~/Downloads/Task04_Hippocampus'
 dataset = nt.Dataset(inputs=readers.ImageReader('imagesTr/*.nii.gz'),
                      outputs=readers.ImageReader('labelsTr/*.nii.gz'),
-                     base_dir=base_dir)
+                     base_dir=base_dir,
+                     transforms={
+                         'outputs': tx.Astype('uint8'),
+                         ('inputs','outputs'): [tx.Reorient('RAS'),
+                                                tx.Resample((40,60,40), use_voxels=True)],
+                         'inputs': tx.StandardNormalize()
+                     })
 
 # optional: get example record and visualize it
 x, y = dataset[0]
-ants.plot(x, y, overlay_alpha=0.7)
+#ants.plot(x, y, overlay_alpha=0.7)
+
+loader = nt.Loader(dataset,
+                   images_per_batch=5,
+                   channels_first=None)
+
+xb, yb = next(iter(loader))
