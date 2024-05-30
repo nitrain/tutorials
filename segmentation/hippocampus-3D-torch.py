@@ -30,10 +30,11 @@ dataset = nt.Dataset(inputs=readers.ImageReader('imagesTr/*.nii.gz'),
                      outputs=readers.ImageReader('labelsTr/*.nii.gz'),
                      base_dir=base_dir,
                      transforms={
-                         'outputs': tx.Astype('uint8'),
                          ('inputs','outputs'): [tx.Resample((40,60,40), use_voxels=True),
                                                 tx.Reorient('RAS')],
-                         'inputs': tx.StandardNormalize()
+                         'inputs': tx.StandardNormalize(),
+                         'outputs': [tx.Astype('uint8'),
+                                     tx.LabelsToChannels(channels_first=True)]
                      })
 
 train_dataset, test_dataset = dataset.split((0.8, 0.2), random=True)
@@ -47,10 +48,7 @@ sampler = samplers.BlockSampler(block_size=(30,30,30), stride=(8,8,8), batch_siz
 train_loader = nt.Loader(train_dataset,
                          images_per_batch=4,
                          channels_first=True,
-                         sampler=sampler,
-                         transforms={
-                             
-                         })
+                         sampler=sampler)
 
 test_loader = train_loader.copy(test_dataset, drop_transforms=True)
 
@@ -73,17 +71,25 @@ model = SegResNet(
     blocks_down=[1, 2, 2, 4],
     blocks_up=[1, 1, 1],
     init_filters=16,
-    in_channels=4,
-    out_channels=3,
+    in_channels=1,
+    out_channels=2,
     dropout_prob=0.2,
 )
 
 loss_function = DiceLoss(smooth_nr=0, smooth_dr=1e-5, squared_pred=True, to_onehot_y=False, sigmoid=True)
 optimizer = torch.optim.Adam(model.parameters(), 1e-4, weight_decay=1e-5)
 
-# alternative: reduction="mean_batch"
-dice_metric = DiceMetric(include_background=True, reduction="mean") 
-post_trans = Compose([Activations(sigmoid=True), AsDiscrete(threshold=0.5)])
+def dice_metric(ytrue, ypred):
+    from monai.data import decollate_batch
+    from monai.transforms import Activations, AsDiscrete, Compose
+    post_trans = Compose([Activations(sigmoid=True), AsDiscrete(threshold=0.5)])
+    dm = DiceMetric(include_background=True, reduction="mean", get_not_nans=False)
+    ypred_act = [post_trans(i) for i in decollate_batch(ypred)]
+    ytrue_act = decollate_batch(ytrue)
+    dm(y_pred=ypred_act, y=ytrue_act)
+    result = dm.aggregate().item()
+    dm.reset()
+    return result
 
 # create trainer
 from nitrain.trainers import TorchTrainer
